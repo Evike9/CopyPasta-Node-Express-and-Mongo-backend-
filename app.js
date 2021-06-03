@@ -1,15 +1,14 @@
 //require dbConnection, install dotenv
 require("dotenv").config();
-require("./configs/dbConnection"); 
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+require("./configs/dbConnection");
+var createError = require("http-errors");
+var express = require("express");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
 const cors = require("cors");
 const session = require("express-session");
 const MongoStore = require("connect-mongo"); //used to store session data in mongoDb
-
 
 var app = express();
 /**
@@ -36,19 +35,19 @@ app.use(
   })
 );
 
-
 /**
  * Routes
  */
 
-const authRouter = require("./routes/auth");
 
-app.use("/api/auth", authRouter);
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/user", require("./routes/user"));
+app.use("/api/snippet", require("./routes/snippet"));
 
 // 404 Middleware
 app.use((req, res, next) => {
-  const error = new Error("Ressource not found.");
-  error.status = 404;
+  let err = new Error("Not found");
+  err.status = 404;
   next(err);
 });
 
