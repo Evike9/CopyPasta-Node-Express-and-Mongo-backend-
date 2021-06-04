@@ -5,6 +5,7 @@ var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
+var bodyParser = require("body-parser");
 var logger = require("morgan");
 const cors = require("cors");
 const session = require("express-session");
@@ -20,8 +21,10 @@ app.use(cors(corsOptions));
 app.use(logger("dev")); // This logs HTTP reponses in the console.
 app.use(express.json()); // Access data sent as json @req.body
 app.use(express.urlencoded({ extended: false })); // Access data sent as application/x-www-form-urlencoded @req.body
-
-app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}))
+// app.use(express.static(path.join(__dirname, "public"))); public has been deleted
 
 app.use(
   session({
@@ -48,7 +51,7 @@ app.use("/api/snippet", require("./routes/snippet"));
 app.use((req, res, next) => {
   let err = new Error("Not found");
   err.status = 404;
-  next(err);
+  next();
 });
 
 // Error handler middleware

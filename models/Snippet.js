@@ -14,10 +14,14 @@ const snippetSchema = new Schema ({
     type: String,
     default: "https://managewp.com/wp-content/uploads/2012/08/code-snippets.png"
     },
-    result: {
+    picture: {
     type: String,
     default: "https://managewp.com/wp-content/uploads/2012/08/code-snippets.png"
     },
+    creator: {
+        type: Schema.Types.ObjectId,
+        ref: "UserModel",
+      },
     },
     { timestamps: true }
     ); 
