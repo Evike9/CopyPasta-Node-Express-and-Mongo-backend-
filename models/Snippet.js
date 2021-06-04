@@ -20,7 +20,7 @@ const snippetSchema = new Schema ({
     },
     creator: {
         type: Schema.Types.ObjectId,
-        ref: "UserModel",
+        ref: "User",
       },
     },
     { timestamps: true }

@@ -47,7 +47,7 @@ router.patch(
       .then((snippetDocument) => {
         if (!snippetDocument)
           return res.status(404).json({ message: "Snippet not found" });
-        if (snippetDocument.creator.toString() !== req.session.currentUser) {
+        if (snippetDocument.creator && snippetDocument.creator.toString() !== req.session.currentUser) {
           return res
             .status(403)
             .json({ message: "You are not allowed to update this document" });
@@ -57,12 +57,13 @@ router.patch(
           snippet.picture = req.file.secure_url;
         }
 
-        SnippetModel.findByIdAndUpdate(req.params.id, item, { new: true })
+        SnippetModel.findByIdAndUpdate(req.params.id, {...req.body}, { new: true })
           .populate("creator")
           .then((updatedDocument) => {
             return res.status(200).json(updatedDocument);
           })
           .catch(next);
+          console.log(111, req.body.title, req.params);
       })
       .catch(next);
   }

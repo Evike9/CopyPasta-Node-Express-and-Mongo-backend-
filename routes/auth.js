@@ -39,7 +39,7 @@ router.post("/signup", (req, res, next) => {
 
       const hashedPassword = bcrypt.hashSync(password, salt);
       const newUser = { email, lastName, firstName, password: hashedPassword };
-
+        console.log('111', req.body)
       UserModel.create(newUser)
         .then((newUserDocument) => {
           /* Login on signup */
