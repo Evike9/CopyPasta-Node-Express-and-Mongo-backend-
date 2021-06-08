@@ -6,7 +6,6 @@ const snippetSchema = new Schema({
 
   title: String,
   userName: String,
-  // date: date,
   description: String,
   category: {
     type: String,
