@@ -19,9 +19,12 @@ router.post("/", protectRoute, uploader.single("picture"), (req, res, next) => {
   const updateValues = { ...req.body };
 
   if (req.file) {
-    updateValues.image = req.file.path;
+    updateValues.picture = req.file.path;
   }
+
   updateValues.creator = req.session.currentUser; // Retrieve the authors id from the session.
+
+
 
   SnippetModel.create(updateValues)
     .then((snippetDocument) => {
@@ -57,13 +60,13 @@ router.patch(
           snippet.picture = req.file.secure_url;
         }
 
-        SnippetModel.findByIdAndUpdate(req.params.id, {...req.body}, { new: true })
+        SnippetModel.findByIdAndUpdate(req.params.id, { ...req.body }, { new: true })
           .populate("creator")
           .then((updatedDocument) => {
             return res.status(200).json(updatedDocument);
           })
           .catch(next);
-          console.log(111, req.body.title, req.params);
+        console.log(111, req.body.title, req.params);
       })
       .catch(next);
   }
