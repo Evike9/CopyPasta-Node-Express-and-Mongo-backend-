@@ -11,9 +11,7 @@ const snippetSchema = new Schema({
     type: String,
     enum: ["HTML", "CSS", "JS", "React", "Other"]
   },
-  snippet: {
-    type: String
-  },
+  snippet: String,
 
   picture: {
     type: String,

@@ -15,6 +15,15 @@ router.get("/", (req, res, next) => {
   //.catch(error => next(error))
 });
 
+router.get("/:id", (req, res, next) => {
+  SnippetModel.findById(req.params.id)
+    .then((snippetDocuments) => {
+      console.log('snippetDocuments', snippetDocuments);
+      res.status(200).json(snippetDocuments);
+    })
+    .catch(next);
+});
+
 router.post("/", protectRoute, uploader.single("picture"), (req, res, next) => {
   const updateValues = { ...req.body };
 
@@ -57,10 +66,13 @@ router.patch(
         }
 
         if (req.file) {
-          snippet.picture = req.file.secure_url;
+          snippet.picture = req.file.path;
+
         }
 
-        SnippetModel.findByIdAndUpdate(req.params.id, { ...req.body }, { new: true })
+        console.log(req.file)
+
+        SnippetModel.findByIdAndUpdate(req.params.id, snippet, { new: true })
           .populate("creator")
           .then((updatedDocument) => {
             return res.status(200).json(updatedDocument);
