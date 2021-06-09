@@ -5,7 +5,6 @@ var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
-var bodyParser = require("body-parser");
 var logger = require("morgan");
 const cors = require("cors");
 const session = require("express-session");
@@ -22,9 +21,7 @@ app.use(logger("dev")); // This logs HTTP reponses in the console.
 app.use(express.json()); // Access data sent as json @req.body
 app.use(express.urlencoded({ extended: false })); // Access data sent as application/x-www-form-urlencoded @req.body
 app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}))
-// app.use(express.static(path.join(__dirname, "public"))); public has been deleted
+app.use(express.static(path.join(__dirname, "public/build")));
 
 app.use(
   session({
@@ -48,10 +45,10 @@ app.use("/api/user", require("./routes/user"));
 app.use("/api/snippet", require("./routes/snippet"));
 
 // 404 Middleware
-app.use((req, res, next) => {
-  let err = new Error("Not found");
-  err.status = 404;
-  next();
+app.use("/api/*", (req, res, next) => {  
+  const error = new Error("Ressource not found.");
+  error.status = 404;
+  next(error);
 });
 
 // Error handler middleware
@@ -59,8 +56,10 @@ app.use((req, res, next) => {
 // You will end up in this middleware
 // next("toto") makes you end up here
 app.use((err, req, res, next) => {
-  if (process.env.NODE_ENV !== "production") {
-    console.error(err);
+  if (process.env.NODE_ENV === "production") {
+    app.use("*", (req, res, next) => {
+      res.sendFile(path.join(__dirname, "public/build/index.html"));
+    });
   }
   console.log("An error occured");
   res.status(err.status || 500);
